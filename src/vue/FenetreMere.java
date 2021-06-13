@@ -1,6 +1,7 @@
 package vue;
 
 import constantes.Constantes;
+import modele.Calendrier;
 import modele.Port;
 import util.LectureEcriture;
 import util.ParsingData;
@@ -34,9 +35,8 @@ public class FenetreMere extends JFrame {
     public static void main(String[] args) {
         new FenetreMere();
         ParsingData.read();
-        for (File file : Objects.requireNonNull(new File(Constantes.OBJ_FILE).listFiles())) {
-            Port port = (Port) LectureEcriture.lecture(file);
-            System.out.println(port);
-        }
+
+        System.out.println(new Calendrier(12));
+        System.exit(0);
     }
 }

@@ -118,7 +118,7 @@ public class ParsingData {
                     String[] split = line.split(" ");
                     switch (split[1]) {
                         case "Station":
-                            String nom = split[split.length - 1];
+                            String nom = split[3];
                             File objet = new File(Constantes.OBJ_FILE + nom + ".ser");
                             if (objet.exists()) {
                                 port = (Port) LectureEcriture.lecture(objet);
@@ -139,26 +139,28 @@ public class ParsingData {
                             }
                             break;
                     }
-                } else if (line.endsWith("4")) {
+                } else if (line.endsWith("1")) {
                     String[] split = line.split(";");
                     String[] time = split[0].split(" ");
-                    try {
-                        Date date = new SimpleDateFormat("dd/MM/yyyy").parse(time[0]);
-                        if (map.containsKey(date)) {
-                            float[] hauteurs = map.get(date).getHauteurs();
-                            hauteurs[currentHour] = Float.parseFloat(split[1]);
-                            map.get(date).setHauteurs(hauteurs);
-                        } else {
-                            Donnees donnees = new Donnees();
-                            float[] hauteurs = donnees.getHauteurs();
-                            hauteurs[currentHour] = Float.parseFloat(split[1]);
-                            donnees.setHauteurs(hauteurs);
-                            map.put(date, donnees);
-                        }
-                        currentHour = (currentHour + 1) % 24;
+                    if (time[1].startsWith("0" + currentHour + ":00") || time[1].startsWith(currentHour + ":00")) {
+                        try {
+                            Date date = new SimpleDateFormat("dd/MM/yyyy").parse(time[0]);
+                            if (map.containsKey(date)) {
+                                float[] hauteurs = map.get(date).getHauteurs();
+                                hauteurs[currentHour] = Float.parseFloat(split[1]);
+                                map.get(date).setHauteurs(hauteurs);
+                            } else {
+                                Donnees donnees = new Donnees();
+                                float[] hauteurs = donnees.getHauteurs();
+                                hauteurs[currentHour] = Float.parseFloat(split[1]);
+                                donnees.setHauteurs(hauteurs);
+                                map.put(date, donnees);
+                            }
+                            currentHour = (currentHour + 1) % 24;
 
-                    } catch (ParseException e) {
-                        e.printStackTrace();
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
