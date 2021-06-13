@@ -9,6 +9,13 @@ import javax.swing.*;
 import java.io.File;
 import java.util.Objects;
 
+/**
+ * Main class used to open the window and start data-collection
+ *
+ * @author Eliott ROGEAUX & Stéphane LAY → INF1-A
+ * @see ParsingData
+ * @see LectureEcriture
+ */
 public class FenetreMere extends JFrame {
 
     public FenetreMere() {
@@ -27,8 +34,7 @@ public class FenetreMere extends JFrame {
     public static void main(String[] args) {
         new FenetreMere();
         ParsingData.read();
-        File folder = new File("objets");
-        for (File file : Objects.requireNonNull(folder.listFiles())) {
+        for (File file : Objects.requireNonNull(new File(Constantes.OBJ_FILE).listFiles())) {
             Port port = (Port) LectureEcriture.lecture(file);
             System.out.println(port);
         }

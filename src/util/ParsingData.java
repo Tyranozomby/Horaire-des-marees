@@ -1,48 +1,71 @@
 package util;
 
+import constantes.Constantes;
 import modele.Donnees;
 import modele.Marees;
 import modele.Port;
 
-import java.io.*;
+import java.io.File;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.FileReader;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+
 import java.time.LocalTime;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Objects;
 
+
 public class ParsingData {
 
-
+    /**
+     * Main method of the class.
+     * This method call all that is necessary to create or complete objects with the datafiles in input-directory
+     * By itself, this method checks if all required directories are here and start to read input-directory.
+     *
+     * @see #readFolder(File)
+     */
     public static void read() {
-        File input = new File("input");
-        File output = new File("output");
-        File objets = new File("objets");
+        File input = new File(Constantes.IN_FILE);
+        File output = new File(Constantes.OUT_FILE);
+        File objets = new File(Constantes.OBJ_FILE);
 
         if (!input.exists()) {
             if (!input.mkdir()) {
-                System.out.println("Problème de privilège, le dossier 'input' recherché ne peut être créé");
+                System.out.println("Problème de privilège, le dossier '" + Constantes.IN_FILE + "' recherché ne peut être créé");
                 System.exit(1);
             }
         }
         if (!output.exists()) {
             if (!output.mkdir()) {
-                System.out.println("Problème de privilège, le dossier 'output' recherché ne peut être créé");
+                System.out.println("Problème de privilège, le dossier '" + Constantes.OUT_FILE + "' recherché ne peut être créé");
                 System.exit(1);
             }
         }
         if (!objets.exists()) {
             if (!objets.mkdir()) {
-                System.out.println("Problème de privilège, le dossier 'objets' recherché ne peut être créé");
+                System.out.println("Problème de privilège, le dossier '" + Constantes.OBJ_FILE + "' recherché ne peut être créé");
                 System.exit(1);
             }
         }
-
         readFolder(input);
     }
 
-    static private void readFolder(File folder) {
+
+    /**
+     * Read all files of input directory and even those inside another directory.
+     * Then, read .txt files and start to read as free or paying datafile.
+     * Expects that all datafiles have the required format.
+     *
+     * @param folder Directory where to look for files to read
+     * @see #readHauteur(File)
+     * @see #readMarees(File)
+     */
+    private static void readFolder(File folder) {
         for (File file : Objects.requireNonNull(folder.listFiles())) {
             if (!file.isDirectory()) {
                 String[] split = file.getName().split("\\.");
@@ -52,13 +75,15 @@ public class ParsingData {
 
                         String line;
                         if ((line = reader.readLine()) != null) {
+                            reader.close();
                             if (line.startsWith("#")) {
                                 readHauteur(file);
                             } else {
                                 readMarees(file);
                             }
+                        } else {
+                            reader.close();
                         }
-                        reader.close();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -69,6 +94,14 @@ public class ParsingData {
         }
     }
 
+
+    /**
+     * Read data from given file as free data format (sea level hour by hour).
+     * Create a new Port object if none exists or complete the corresponding one stored in objects-directory.
+     *
+     * @param file datafile to read
+     * @see Port
+     */
     private static void readHauteur(File file) {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -86,7 +119,7 @@ public class ParsingData {
                     switch (split[1]) {
                         case "Station":
                             String nom = split[split.length - 1];
-                            File objet = new File("objets/" + nom + ".ser");
+                            File objet = new File(Constantes.OBJ_FILE + nom + ".ser");
                             if (objet.exists()) {
                                 port = (Port) LectureEcriture.lecture(objet);
                                 map = port.getMap();
@@ -131,16 +164,23 @@ public class ParsingData {
             }
             reader.close();
             port.setMap(map);
-            LectureEcriture.ecriture(new File("objets/" + port.getNom() + ".ser"), port);
-            //TODO move file used to output
+            LectureEcriture.ecriture(new File(Constantes.OBJ_FILE + port.getNom() + ".ser"), port);
+            file.renameTo(new File(Constantes.OUT_FILE + file.getName()));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+
+    /**
+     * Read data from given file as paying data format (high tide and low tide).
+     * Create a new Port object if none exists or complete the corresponding one stored in objects-directory.
+     *
+     * @param file datafile to read
+     * @see Port
+     */
     private static void readMarees(File file) {
         try {
-
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String line;
 
@@ -163,7 +203,7 @@ public class ParsingData {
                     }
                     nom = nom.substring(0, nom.length() - 1);
                     nom = nom.replace(' ', '-').toUpperCase();
-                    File objet = new File("objets/" + nom + ".ser");
+                    File objet = new File(Constantes.OBJ_FILE + nom + ".ser");
                     if (objet.exists()) {
                         port = (Port) LectureEcriture.lecture(objet);
                         map = port.getMap();
@@ -207,12 +247,21 @@ public class ParsingData {
             }
             reader.close();
             port.setMap(map);
-            LectureEcriture.ecriture(new File("objets/" + port.getNom() + ".ser"), port);
+            LectureEcriture.ecriture(new File(Constantes.OBJ_FILE + port.getNom() + ".ser"), port);
+            file.renameTo(new File(Constantes.OUT_FILE + file.getName()));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Method called by readMarees to split and set Marees object.
+     *
+     * @param split  splitted line with tide data
+     * @param marees Array for the 4 tides of the day
+     * @see #readMarees(File)
+     * @see Marees
+     */
     private static void setMarees(String[] split, Marees[] marees) {
         marees[0] = new Marees(LocalTime.parse(split[1]), Float.parseFloat(split[2]), Integer.parseInt(split[3], 10));
         if (split[4].startsWith("--")) {
