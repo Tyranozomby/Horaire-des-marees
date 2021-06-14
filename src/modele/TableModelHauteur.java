@@ -8,6 +8,7 @@ import java.util.ArrayList;
 public class TableModelHauteur implements TableModel {
 
     private float[] listeHauteur = new float[24];
+    private static final String[] header = {"Heure:", "0h", "1h", "2h", "3h", "4h", "5h", "6h", "7h", "8h", "9h", "10h", "11h",};
 
     private final ArrayList<TableModelListener> listeners = new ArrayList<>();
 
@@ -18,12 +19,12 @@ public class TableModelHauteur implements TableModel {
 
     @Override
     public int getColumnCount() {
-        return listeHauteur.length / 2;
+        return header.length;
     }
 
     @Override
     public String getColumnName(int columnIndex) {
-        return null;
+        return header[columnIndex];
     }
 
     @Override
@@ -38,8 +39,14 @@ public class TableModelHauteur implements TableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        int val = 12 * rowIndex + columnIndex;
-        return val + "h " + listeHauteur[val];
+        if (columnIndex == 0) {
+            if (rowIndex == 0) {
+                return "AM";
+            } else {
+                return "PM";
+            }
+        }
+        return listeHauteur[rowIndex * 12 + (columnIndex - 1)];
     }
 
     @Override
@@ -57,7 +64,7 @@ public class TableModelHauteur implements TableModel {
         listeners.remove(l);
     }
 
-    public void setListeHauteur(float[] list) {
+    public void setListeHauteurs(float[] list) {
         listeHauteur = list;
         for (TableModelListener listener : listeners) {
             listener.tableChanged(new TableModelEvent(this));

@@ -36,7 +36,5 @@ public class FenetreMere extends JFrame {
         new FenetreMere();
         ParsingData.read();
 
-        System.out.println(new Calendrier(12));
-        System.exit(0);
     }
 }

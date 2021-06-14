@@ -11,13 +11,6 @@ public class Port implements Serializable {
     private float longitude;
     private HashMap<Date, Donnees> map;
 
-    public Port(String nom, float latitude, float longitude, HashMap<Date, Donnees> map) {
-        this.nom = nom;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.map = map;
-    }
-
     public Port() {
         this.nom = "";
         this.latitude = 0;
