@@ -6,11 +6,9 @@ import java.util.TreeSet;
 
 public class Calendrier {
 
-    private final TreeSet<Date> listeDates;
-
-    public Calendrier(int mois) {
+    public static TreeSet<Date> getDates(int mois) {
         mois--;
-        listeDates = new TreeSet<>();
+        TreeSet<Date> listeDates = new TreeSet<>();
         GregorianCalendar cal = new GregorianCalendar(2021, mois, 1);
         int day = cal.get(GregorianCalendar.DAY_OF_WEEK);
 
@@ -30,16 +28,7 @@ public class Calendrier {
             day = 1;
         }
         listeDates.add(Date.from(cal.toInstant()));
-
-    }
-
-    public TreeSet<Date> getDates() {
         return listeDates;
-    }
-
-    @Override
-    public String toString() {
-        return listeDates.toString();
     }
 
 }

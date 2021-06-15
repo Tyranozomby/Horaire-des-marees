@@ -1,4 +1,10 @@
 package vue;
 
-public class PanelDonnees {
+import javax.swing.*;
+
+public class PanelDonnees extends JPanel {
+
+    public PanelDonnees() {
+        setOpaque(false);
+    }
 }

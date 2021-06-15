@@ -1,19 +1,21 @@
 package vue;
 
-import constantes.Constantes;
-import modele.Port;
-import util.LectureEcriture;
-
 import javax.swing.*;
-import java.io.File;
+import java.awt.*;
 
 public class SuperPanel extends JPanel {
 
-    private final JComboBox<Port> comboBox = new JComboBox<>(LectureEcriture.lireTout(new File(Constantes.OBJ_FILE)));
+    private final PanelSelection selection = new PanelSelection();
+    private final PanelDonnees donnees = new PanelDonnees();
 
     public SuperPanel() {
-        setOpaque(false);
-        add(comboBox);
+        setBackground(new Color(170, 185, 185));
+        setLayout(new BorderLayout());
+
+        add(selection, BorderLayout.WEST);
+        add(donnees, BorderLayout.EAST);
+
+
     }
 
 

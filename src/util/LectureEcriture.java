@@ -49,7 +49,7 @@ public class LectureEcriture {
             flux.flush();
             flux.close();
         } catch (IOException parException) {
-            System.err.println("Erreur écriture du fichier " + parException);
+            System.err.println("Erreur écriture du fichier '" + parFichier.getName() + "'" + parException);
             System.exit(3);
         }
     }
@@ -67,7 +67,6 @@ public class LectureEcriture {
                 System.exit(2);
             }
         }
-        System.out.println(liste);
         return liste.toArray(new Port[0]);
     }
 }

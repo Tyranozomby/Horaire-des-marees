@@ -5,8 +5,11 @@ import modele.Donnees;
 import modele.Marees;
 import modele.Port;
 
-import javax.swing.*;
-import java.io.*;
+import javax.swing.JProgressBar;
+import java.io.File;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -17,7 +20,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Objects;
 
-
+/**
+ * Class with static methods to read the datafiles inside the input-directory then convert them into Port objects and stock those into objects-directory
+ * Then move the files into the output-directory
+ */
 public class ParsingData {
 
     /**
