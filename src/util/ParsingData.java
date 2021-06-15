@@ -5,10 +5,8 @@ import modele.Donnees;
 import modele.Marees;
 import modele.Port;
 
-import java.io.File;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.FileReader;
+import javax.swing.*;
+import java.io.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,9 +25,10 @@ public class ParsingData {
      * This method call all that is necessary to create or complete objects with the datafiles in input-directory
      * By itself, this method checks if all required directories are here and start to read input-directory.
      *
-     * @see #readFolder(File)
+     * @param bar JProgressBar to see the evolution
+     * @see #readFolder(File, JProgressBar)
      */
-    public static void read() {
+    public static void read(JProgressBar bar) {
         File input = new File(Constantes.IN_FILE);
         File output = new File(Constantes.OUT_FILE);
         File objets = new File(Constantes.OBJ_FILE);
@@ -52,7 +51,9 @@ public class ParsingData {
                 System.exit(1);
             }
         }
-        readFolder(input);
+
+        bar.setMaximum(getTotalLines());
+        readFolder(input, bar);
     }
 
 
@@ -62,10 +63,11 @@ public class ParsingData {
      * Expects that all datafiles have the required format.
      *
      * @param folder Directory where to look for files to read
-     * @see #readHauteur(File)
-     * @see #readMarees(File)
+     * @param bar    JProgressBar to see the evolution
+     * @see #readHauteur(File, JProgressBar)
+     * @see #readMarees(File, JProgressBar)
      */
-    private static void readFolder(File folder) {
+    private static void readFolder(File folder, JProgressBar bar) {
         for (File file : Objects.requireNonNull(folder.listFiles())) {
             if (!file.isDirectory()) {
                 String[] split = file.getName().split("\\.");
@@ -77,9 +79,9 @@ public class ParsingData {
                         if ((line = reader.readLine()) != null) {
                             reader.close();
                             if (line.startsWith("#")) {
-                                readHauteur(file);
+                                readHauteur(file, bar);
                             } else {
-                                readMarees(file);
+                                readMarees(file, bar);
                             }
                         } else {
                             reader.close();
@@ -89,7 +91,7 @@ public class ParsingData {
                     }
                 }
             } else {
-                readFolder(file);
+                readFolder(file, bar);
             }
         }
     }
@@ -100,9 +102,10 @@ public class ParsingData {
      * Create a new Port object if none exists or complete the corresponding one stored in objects-directory.
      *
      * @param file datafile to read
+     * @param bar  JProgressBar to see the evolution
      * @see Port
      */
-    private static void readHauteur(File file) {
+    private static void readHauteur(File file, JProgressBar bar) {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String line;
@@ -163,6 +166,7 @@ public class ParsingData {
                         }
                     }
                 }
+                bar.setValue(bar.getValue() + 1);
             }
             reader.close();
             port.setMap(map);
@@ -177,11 +181,12 @@ public class ParsingData {
     /**
      * Read data from given file as paying data format (high tide and low tide).
      * Create a new Port object if none exists or complete the corresponding one stored in objects-directory.
+     * Also fulfill the given JProgressBar
      *
      * @param file datafile to read
      * @see Port
      */
-    private static void readMarees(File file) {
+    private static void readMarees(File file, JProgressBar bar) {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String line;
@@ -246,6 +251,7 @@ public class ParsingData {
                         e.printStackTrace();
                     }
                 }
+                bar.setValue(bar.getValue() + 1);
             }
             reader.close();
             port.setMap(map);
@@ -258,10 +264,12 @@ public class ParsingData {
 
     /**
      * Method called by readMarees to split and set Marees object.
+     * Create a new Port object if none exists or complete the corresponding one stored in objects-directory.
+     * Also fulfill the given JProgressBar
      *
      * @param split  splitted line with tide data
      * @param marees Array for the 4 tides of the day
-     * @see #readMarees(File)
+     * @see #readMarees(File, JProgressBar)
      * @see Marees
      */
     private static void setMarees(String[] split, Marees[] marees) {
@@ -278,6 +286,50 @@ public class ParsingData {
         } else {
             marees[3] = new Marees(LocalTime.parse(split[9]), Float.parseFloat(split[10]), 0);
         }
+    }
+
+
+    /**
+     * Method to get the total number of line that will be read in order to increase properly the JProgressBar
+     *
+     * @return int corresponding to the total of lines of all the files
+     * @see #getLinesOf(File)
+     */
+    private static int getTotalLines() {
+        File input = new File(Constantes.IN_FILE);
+
+        if (!input.exists()) {
+            if (!input.mkdir()) {
+                System.out.println("Problème de privilège, le dossier '" + Constantes.IN_FILE + "' recherché ne peut être créé");
+                System.exit(1);
+            }
+        }
+        return getLinesOf(input);
+    }
+
+    /**
+     * Count the number of lines of a specific file.
+     * If this file is a directory, then count the lines of the files inside itself.
+     *
+     * @param folder File where to count the number of lines
+     * @return number of lines of the file
+     */
+    private static int getLinesOf(File folder) {
+        int count = 0;
+        for (File file : Objects.requireNonNull(folder.listFiles())) {
+            if (file.isDirectory()) { // If directory
+                count += getLinesOf(file);
+            } else if (file.getName().endsWith(".txt")) { //If file .txt
+                try {
+                    BufferedReader reader = new BufferedReader(new FileReader(file));
+                    while (reader.readLine() != null) count++;
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return count;
     }
 
 }

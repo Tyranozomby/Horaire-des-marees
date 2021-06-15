@@ -1,17 +1,14 @@
 package vue;
 
 import constantes.Constantes;
-import modele.Calendrier;
-import modele.Port;
+import control.MainController;
 import util.LectureEcriture;
 import util.ParsingData;
 
 import javax.swing.*;
-import java.io.File;
-import java.util.Objects;
 
 /**
- * Main class used to open the window and start data-collection
+ * Class used to start the program and open the main window
  *
  * @author Eliott ROGEAUX & Stéphane LAY → INF1-A
  * @see ParsingData
@@ -22,9 +19,6 @@ public class FenetreMere extends JFrame {
     public FenetreMere() {
         super("• WaterFlotte •");
 
-        SuperPanel contentPane = new SuperPanel();
-        this.setContentPane(contentPane);
-
         this.setSize(1080, 720);
         this.setLocationRelativeTo(null);   //Center JFrame in the middle of the screen
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -33,8 +27,6 @@ public class FenetreMere extends JFrame {
     }
 
     public static void main(String[] args) {
-        new FenetreMere();
-        ParsingData.read();
-
+        new MainController(new FenetreMere());
     }
 }

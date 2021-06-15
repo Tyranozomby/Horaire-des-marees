@@ -1,11 +1,16 @@
 package util;
 
+import modele.Port;
+
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Objects;
 
 public class LectureEcriture {
 
@@ -47,5 +52,22 @@ public class LectureEcriture {
             System.err.println("Erreur écriture du fichier " + parException);
             System.exit(3);
         }
+    }
+
+
+    public static Port[] lireTout(File folder) {
+        ArrayList<Port> liste = new ArrayList<>();
+        for (File file : Objects.requireNonNull(folder.listFiles())) {
+            try {
+                ObjectInputStream flux = new ObjectInputStream(new FileInputStream(file));
+                liste.add((Port) flux.readObject());
+                flux.close();
+            } catch (ClassNotFoundException | IOException e) {
+                e.printStackTrace();
+                System.exit(2);
+            }
+        }
+        System.out.println(liste);
+        return liste.toArray(new Port[0]);
     }
 }

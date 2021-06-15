@@ -56,6 +56,6 @@ public class Port implements Serializable {
 
     @Override
     public String toString() {
-        return nom + " " + longitude + " " + latitude + " " + map;
+        return nom;
     }
 }
