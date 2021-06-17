@@ -1,33 +1,36 @@
 package modele;
 
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.time.LocalDate;
 import java.util.TreeSet;
 
 public class Calendrier {
 
-    public static TreeSet<Date> getDates(int mois) {
-        mois--;
-        TreeSet<Date> listeDates = new TreeSet<>();
-        GregorianCalendar cal = new GregorianCalendar(2021, mois, 1);
-        int day = cal.get(GregorianCalendar.DAY_OF_WEEK);
+    /**
+     * Only method of the class. It creates a TreeSet of LocalDates starting from the monday of the first week and ending 6 weeks after
+     *
+     * @param mois corresponding to the month you want
+     * @return the created TreeSet with 42 dates in it
+     */
+    public static TreeSet<LocalDate> getDates(int mois) {
+        TreeSet<LocalDate> listeDates = new TreeSet<>();
+        LocalDate date = LocalDate.of(2021, mois, 1);
+        int day = date.getDayOfWeek().getValue();
 
-        for (int i = day; i > 1; i--) {
-            listeDates.add(Date.from(cal.toInstant()));
-            cal.add(GregorianCalendar.DAY_OF_MONTH, -1);
+        for (int i = day; i > 0; i--) {
+            listeDates.add(date);
+            date = date.minusDays(1);
         }
-        cal = new GregorianCalendar(2021, mois, 2);
-        day = cal.get(GregorianCalendar.DAY_OF_WEEK);
+        date = LocalDate.of(2021, mois, 2);
+        day = date.getDayOfWeek().getValue();
 
-        while (cal.get(GregorianCalendar.MONTH) == mois) {
+        while (listeDates.size() < 42) { // 6×7
             while (day <= 7) {
-                listeDates.add(Date.from(cal.toInstant()));
-                cal.add(GregorianCalendar.DAY_OF_MONTH, 1);
+                listeDates.add(date);
+                date = date.plusDays(1);
                 day++;
             }
             day = 1;
         }
-        listeDates.add(Date.from(cal.toInstant()));
         return listeDates;
     }
 

@@ -19,4 +19,11 @@ public class SuperPanel extends JPanel {
     }
 
 
+    public PanelSelection getSelectPanel() {
+        return selection;
+    }
+
+    public PanelDonnees getDataPanel() {
+        return donnees;
+    }
 }

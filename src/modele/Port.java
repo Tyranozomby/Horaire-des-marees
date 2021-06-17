@@ -1,7 +1,7 @@
 package modele;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.HashMap;
 
 public class Port implements Serializable {
@@ -9,7 +9,7 @@ public class Port implements Serializable {
     private String nom;
     private float latitude;
     private float longitude;
-    private HashMap<Date, Donnees> map;
+    private HashMap<LocalDate, Donnees> map;
 
     public Port() {
         this.nom = "";
@@ -30,11 +30,11 @@ public class Port implements Serializable {
         return longitude;
     }
 
-    public HashMap<Date, Donnees> getMap() {
+    public HashMap<LocalDate, Donnees> getMap() {
         return map;
     }
 
-    public Donnees getDonnees(Date date) {
+    public Donnees getDonnees(LocalDate date) {
         return map.get(date);
     }
 
@@ -50,7 +50,7 @@ public class Port implements Serializable {
         this.longitude = longitude;
     }
 
-    public void setMap(HashMap<Date, Donnees> map) {
+    public void setMap(HashMap<LocalDate, Donnees> map) {
         this.map = map;
     }
 

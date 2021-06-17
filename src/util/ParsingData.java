@@ -11,12 +11,10 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-
+import java.time.LocalDate;
 import java.time.LocalTime;
 
-import java.util.Date;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -57,9 +55,14 @@ public class ParsingData {
                 System.exit(1);
             }
         }
-
-        bar.setMaximum(getTotalLines());
-        readFolder(input, bar);
+        int totalLines = getTotalLines();
+        if (totalLines != 0) {
+            bar.setMaximum(totalLines);
+            readFolder(input, bar);
+        } else {
+            bar.setMaximum(100);
+            bar.setValue(100);
+        }
     }
 
 
@@ -117,7 +120,7 @@ public class ParsingData {
             String line;
 
             Port port = new Port();
-            HashMap<Date, Donnees> map = new HashMap<>();
+            HashMap<LocalDate, Donnees> map = new HashMap<>();
 
             boolean newPort = true;
             int currentHour = 0;
@@ -152,24 +155,21 @@ public class ParsingData {
                     String[] split = line.split(";");
                     String[] time = split[0].split(" ");
                     if (time[1].startsWith("0" + currentHour + ":00") || time[1].startsWith(currentHour + ":00")) {
-                        try {
-                            Date date = new SimpleDateFormat("dd/MM/yyyy").parse(time[0]);
-                            if (map.containsKey(date)) {
-                                float[] hauteurs = map.get(date).getHauteurs();
-                                hauteurs[currentHour] = Float.parseFloat(split[1]);
-                                map.get(date).setHauteurs(hauteurs);
-                            } else {
-                                Donnees donnees = new Donnees();
-                                float[] hauteurs = donnees.getHauteurs();
-                                hauteurs[currentHour] = Float.parseFloat(split[1]);
-                                donnees.setHauteurs(hauteurs);
-                                map.put(date, donnees);
-                            }
-                            currentHour = (currentHour + 1) % 24;
-
-                        } catch (ParseException e) {
-                            e.printStackTrace();
+                        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                        LocalDate date = LocalDate.parse(time[0], format);
+                        if (map.containsKey(date)) {
+                            float[] hauteurs = map.get(date).getHauteurs();
+                            hauteurs[currentHour] = Float.parseFloat(split[1]);
+                            map.get(date).setHauteurs(hauteurs);
+                        } else {
+                            Donnees donnees = new Donnees();
+                            float[] hauteurs = donnees.getHauteurs();
+                            hauteurs[currentHour] = Float.parseFloat(split[1]);
+                            donnees.setHauteurs(hauteurs);
+                            map.put(date, donnees);
                         }
+                        currentHour = (currentHour + 1) % 24;
+
                     }
                 }
                 bar.setValue(bar.getValue() + 1);
@@ -198,7 +198,7 @@ public class ParsingData {
             String line;
 
             Port port = new Port();
-            HashMap<Date, Donnees> map = new HashMap<>();
+            HashMap<LocalDate, Donnees> map = new HashMap<>();
 
             String nom = "";
             boolean newPort = true;
@@ -237,24 +237,21 @@ public class ParsingData {
                         port.setLongitude(Float.parseFloat(lon[2]));
                     }
                 } else if (line.startsWith("2021")) {
-                    try {
-                        String[] split = line.split("\t");
-                        Date date = new SimpleDateFormat("yyyy-MM-dd").parse(split[0]);
-                        if (map.containsKey(date)) {
-                            Marees[] marees = map.get(date).getMarees();
+                    String[] split = line.split("\t");
+                    DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    LocalDate date = LocalDate.parse(split[0], format);
+                    if (map.containsKey(date)) {
+                        Marees[] marees = map.get(date).getMarees();
 
-                            setMarees(split, marees);
-                        } else {
-                            Donnees donnees = new Donnees();
-                            Marees[] marees = donnees.getMarees();
+                        setMarees(split, marees);
+                    } else {
+                        Donnees donnees = new Donnees();
+                        Marees[] marees = donnees.getMarees();
 
-                            setMarees(split, marees);
+                        setMarees(split, marees);
 
-                            donnees.setMarees(marees);
-                            map.put(date, donnees);
-                        }
-                    } catch (ParseException e) {
-                        e.printStackTrace();
+                        donnees.setMarees(marees);
+                        map.put(date, donnees);
                     }
                 }
                 bar.setValue(bar.getValue() + 1);
