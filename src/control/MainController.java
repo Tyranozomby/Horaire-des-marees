@@ -49,17 +49,18 @@ public class MainController implements ActionListener {
             int dayNum = Integer.parseInt(split[1]);
 
             DateTimeFormatter format = DateTimeFormatter.ofPattern("d M yyyy");
-            LocalDate newDate = LocalDate.parse(dayNum + " " + currentMonth + " 2021", format);
+            LocalDate newDate;
 
             if (type.equals("Previous")) {
-                newDate = newDate.minusMonths(1);
-                selectPanel.setMonth(currentMonth - 1);
+                currentMonth--;
+                selectPanel.setMonth(currentMonth);
                 newSelect = selectPanel.getCurrentMonthButtonOf(newSelect);
             } else if (type.equals("Next")) {
-                newDate = newDate.plusMonths(1);
-                selectPanel.setMonth(currentMonth + 1);
+                currentMonth++;
+                selectPanel.setMonth(currentMonth);
                 newSelect = selectPanel.getCurrentMonthButtonOf(newSelect);
             }
+            newDate = LocalDate.parse(dayNum + " " + currentMonth + " 2021", format);
 
             selectPanel.getSelected().setBackground(Constantes.CURRENT_MONTH_COL);
             selectPanel.setSelected(newSelect);
@@ -67,7 +68,7 @@ public class MainController implements ActionListener {
             selectPanel.setDate(newDate);
 
         } else if (command.equals("Port")) {
-            System.out.println(selectPanel.getPort());
+            System.out.println(selectPanel.getPort() + " | " + selectPanel.getDate());
             //TODO
         } else if (command.equals("<<")) {
             selectPanel.setMonth(1);

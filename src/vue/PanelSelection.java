@@ -5,8 +5,18 @@ import control.MainController;
 import modele.Port;
 import util.LectureEcriture;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JPanel;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JButton;
+
+import java.awt.BorderLayout;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.CardLayout;
+import java.awt.Insets;
+import java.awt.Dimension;
+
 import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -25,8 +35,7 @@ public class PanelSelection extends JPanel {
     private final DateTimeFormatter format = DateTimeFormatter.ofPattern("EEEE d MMMM yyyy");
 
     private final PanelCalendrier[] calendriers = new PanelCalendrier[12];
-    private final String[] NOM_BOUTONS = {"<<", "<", ">", ">>"};
-    private final JButton[] boutonsNav = new JButton[NOM_BOUTONS.length];
+    private final JButton[] boutonsNav = new JButton[Constantes.NOM_BOUTONS.length];
 
     private final CardLayout layout = new CardLayout();
     private final JPanel panelCentre = new JPanel(layout);
@@ -71,7 +80,7 @@ public class PanelSelection extends JPanel {
 
         for (int i = 0; i < 2; i++) {
             c.gridx = i;
-            JButton bouton = new JButton(NOM_BOUTONS[i]);
+            JButton bouton = new JButton(Constantes.NOM_BOUTONS[i]);
             bouton.setPreferredSize(new Dimension(50, 30));
             bouton.setFocusPainted(false);
             boutonsNav[i] = bouton;
@@ -84,9 +93,9 @@ public class PanelSelection extends JPanel {
         labelMois.setPreferredSize(new Dimension(110, 20));
         panelSud.add(labelMois, c);
 
-        for (int i = 2; i < NOM_BOUTONS.length; i++) {
+        for (int i = 2; i < Constantes.NOM_BOUTONS.length; i++) {
             c.gridx = i + 1;
-            JButton bouton = new JButton(NOM_BOUTONS[i]);
+            JButton bouton = new JButton(Constantes.NOM_BOUTONS[i]);
             bouton.setPreferredSize(new Dimension(50, 30));
             bouton.setFocusPainted(false);
             boutonsNav[i] = bouton;
@@ -139,8 +148,8 @@ public class PanelSelection extends JPanel {
         for (PanelCalendrier cal : calendriers) {
             cal.addListener(controller);
         }
-        for (int i = 0; i < NOM_BOUTONS.length; i++) {
-            boutonsNav[i].setActionCommand(NOM_BOUTONS[i]);
+        for (int i = 0; i < Constantes.NOM_BOUTONS.length; i++) {
+            boutonsNav[i].setActionCommand(Constantes.NOM_BOUTONS[i]);
             boutonsNav[i].addActionListener(controller);
         }
         comboBox.setActionCommand("Port");

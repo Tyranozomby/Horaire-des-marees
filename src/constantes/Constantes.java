@@ -10,7 +10,8 @@ public interface Constantes {
     String FIC_FILE = "fichiers/";
 
     String[] NOM_MOIS = {"Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"};
-    String[] NOM_JOURS = {"lu", "ma", "me", "je", "ve", "sa", "di",};
+    String[] NOM_JOURS = {"lun", "mar", "mer", "jeu", "ven", "sam", "dim"};
+    String[] NOM_BOUTONS = {"<<", "<", ">", ">>"};
 
 /*    Color OTHER_MONTH_COL = new Color(0, 100, 130);
     Color SELECT_COL = new Color(0, 190, 255);

@@ -9,7 +9,6 @@ import java.io.FileOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Objects;
 
 public class LectureEcriture {
@@ -17,20 +16,17 @@ public class LectureEcriture {
     /**
      * Méthode de lecture d’un fichier
      *
-     * @param parFichier : le fichier lu
+     * @param file : le fichier lu
      * @return l’objet lu
      */
-    public static Object lecture(File parFichier) {
+    public static Object lecture(File file) {
         Object objetLu = null;
         try {
-            ObjectInputStream flux = new ObjectInputStream(new FileInputStream(parFichier));
-            objetLu = flux.readObject();
-            flux.close();
-        } catch (ClassNotFoundException parException) {
-            parException.printStackTrace();
-            System.exit(2);
-        } catch (IOException parException) {
-            System.err.println("Erreur lecture du fichier " + parException);
+            ObjectInputStream stream = new ObjectInputStream(new FileInputStream(file));
+            objetLu = stream.readObject();
+            stream.close();
+        } catch (ClassNotFoundException | IOException parException) {
+            System.err.println("Erreur lecture du fichier '" + file.getName() + "'" + parException);
             System.exit(2);
         }
         return objetLu;
@@ -39,17 +35,17 @@ public class LectureEcriture {
     /**
      * Méthode d’écriture dans un fichier
      *
-     * @param parFichier : le fichier dans lequel on écrit
-     * @param parObjet   : l’objet écrit dans le fichier
+     * @param file   : le fichier dans lequel on écrit
+     * @param object : l’objet écrit dans le fichier
      */
-    public static void ecriture(File parFichier, Object parObjet) {
+    public static void ecriture(File file, Object object) {
         try {
-            ObjectOutputStream flux = new ObjectOutputStream(new FileOutputStream(parFichier));
-            flux.writeObject(parObjet);
+            ObjectOutputStream flux = new ObjectOutputStream(new FileOutputStream(file));
+            flux.writeObject(object);
             flux.flush();
             flux.close();
         } catch (IOException parException) {
-            System.err.println("Erreur écriture du fichier '" + parFichier.getName() + "'" + parException);
+            System.err.println("Erreur écriture du fichier '" + file.getName() + "'" + parException);
             System.exit(3);
         }
     }
@@ -58,14 +54,7 @@ public class LectureEcriture {
     public static Port[] lireTout(File folder) {
         ArrayList<Port> liste = new ArrayList<>();
         for (File file : Objects.requireNonNull(folder.listFiles())) {
-            try {
-                ObjectInputStream flux = new ObjectInputStream(new FileInputStream(file));
-                liste.add((Port) flux.readObject());
-                flux.close();
-            } catch (ClassNotFoundException | IOException e) {
-                e.printStackTrace();
-                System.exit(2);
-            }
+            liste.add((Port) lecture(file));
         }
         return liste.toArray(new Port[0]);
     }
