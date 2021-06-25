@@ -2,7 +2,9 @@ package vue;
 
 import javax.swing.JFrame;
 
-
+/**
+ * Window for the project.
+ */
 public class FenetreMere extends JFrame {
 
     public FenetreMere() {
@@ -15,5 +17,4 @@ public class FenetreMere extends JFrame {
         this.setResizable(false);
         this.setVisible(true);
     }
-
 }

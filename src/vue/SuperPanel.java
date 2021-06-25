@@ -1,8 +1,13 @@
 package vue;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JPanel;
+import java.awt.Color;
+import java.awt.BorderLayout;
 
+/**
+ * Main panel.<br/>
+ * Contain panel for port or date selection and display panel.
+ */
 public class SuperPanel extends JPanel {
 
     private final PanelSelection selection = new PanelSelection();
@@ -14,10 +19,7 @@ public class SuperPanel extends JPanel {
 
         add(selection, BorderLayout.WEST);
         add(donnees, BorderLayout.EAST);
-
-
     }
-
 
     public PanelSelection getSelectPanel() {
         return selection;

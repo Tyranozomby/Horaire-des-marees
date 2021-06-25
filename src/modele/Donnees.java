@@ -3,6 +3,9 @@ package modele;
 import java.io.Serializable;
 import java.util.Arrays;
 
+/**
+ *
+ */
 public class Donnees implements Serializable {
 
     private Marees[] marees;    //Size = 4
