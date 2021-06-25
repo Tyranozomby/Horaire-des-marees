@@ -73,7 +73,7 @@ public class TableModelMarees implements TableModel {
                 return "---";
             }
         } else if (columnIndex == 3) {
-            LocalTime time = BM.getHeure();
+            LocalTime time = mar.getHeure();
             if (time != null) {
                 return time.toString();
             } else {
