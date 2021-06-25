@@ -4,36 +4,46 @@ import constantes.Constantes;
 import util.ParsingData;
 import vue.*;
 
-import javax.swing.*;
+import javax.swing.JButton;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Class used to start the program.<br/>
+ * Main class of the project.
+ * Create the window and link the selection of port or date with data displaying.<br/>
+ * Use a thread to read datafiles while having a moving loading bar.
+ *
+ * @author <b>Eliott ROGEAUX</b> & <b>Stéphane LAY</b> → <u>INF1-A1</u>
+ */
 public class MainController implements ActionListener {
 
-    private SuperPanel superPanel;
     private PanelSelection selectPanel;
     private PanelDonnees dataPanel;
 
-    public MainController(FenetreMere mere) {
+    public MainController() {
+        FenetreMere mere = new FenetreMere();
 
         new Thread(() -> { //Thread pour la barre de chargement principale
             PanelChargement load = (PanelChargement) mere.getContentPane();
             ParsingData.read(load.getChargementBarre());
 
-            superPanel = new SuperPanel();
+            SuperPanel superPanel = new SuperPanel();
             selectPanel = superPanel.getSelectPanel();
             dataPanel = superPanel.getDataPanel();
 
             selectPanel.addListener(this);
-            dataPanel.addListener(this);
 
             mere.setContentPane(superPanel); //Affiche le panel principal
             mere.validate(); //Valide la modification
         }).start();
 
     }
+
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -62,14 +72,14 @@ public class MainController implements ActionListener {
             }
             newDate = LocalDate.parse(dayNum + " " + currentMonth + " 2021", format);
 
-            selectPanel.getSelected().setBackground(Constantes.CURRENT_MONTH_COL);
-            selectPanel.setSelected(newSelect);
+            selectPanel.getSelectedButton().setBackground(Constantes.CURRENT_MONTH_COL);
+            selectPanel.setSelectedButton(newSelect);
             newSelect.setBackground(Constantes.SELECT_COL);
             selectPanel.setDate(newDate);
+            dataPanel.setInfos(selectPanel.getPort(), selectPanel.getDate());
 
         } else if (command.equals("Port")) {
-            System.out.println(selectPanel.getPort() + " | " + selectPanel.getDate());
-            //TODO
+            dataPanel.setInfos(selectPanel.getPort(), selectPanel.getDate());
         } else if (command.equals("<<")) {
             selectPanel.setMonth(1);
         } else if (command.equals("<")) {
@@ -81,5 +91,14 @@ public class MainController implements ActionListener {
         } else if (command.equals(">>")) {
             selectPanel.setMonth(12);
         }
+    }
+
+    /**
+     * Method to start the program
+     *
+     * @param args not used
+     */
+    public static void main(String[] args) {
+        new MainController();
     }
 }

@@ -11,8 +11,6 @@ import java.util.TreeSet;
 
 public class PanelCalendrier extends JPanel {
 
-    private static JButton selected;
-
     private final JButton[] boutons = new JButton[42];
 
     public PanelCalendrier(int mois) {
@@ -50,7 +48,6 @@ public class PanelCalendrier extends JPanel {
 
             if (date.equals(today)) {
                 bouton.setBackground(Constantes.SELECT_COL);
-                selected = bouton;
             }
 
             boutons[indice] = bouton;
@@ -59,11 +56,7 @@ public class PanelCalendrier extends JPanel {
         }
     }
 
-    public JButton getSelected() {
-        return selected;
-    }
-
-    public JButton getButtonOf(JButton src) {
+    public JButton getActualButtonOf(JButton src) {
         for (JButton dest : boutons) {
             String cmdDest = dest.getActionCommand();
             if (cmdDest.startsWith("Current")) {

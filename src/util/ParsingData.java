@@ -55,7 +55,9 @@ public class ParsingData {
                 System.exit(1);
             }
         }
-        int totalLines = getTotalLines();
+
+        int totalLines = getTotalLines(input);
+
         if (totalLines != 0) {
             bar.setMaximum(totalLines);
             readFolder(input, bar);
@@ -73,24 +75,23 @@ public class ParsingData {
      *
      * @param folder Directory where to look for files to read
      * @param bar    JProgressBar to see the evolution
-     * @see #readHauteur(File, JProgressBar)
+     * @see #readHauteurs(File, JProgressBar)
      * @see #readMarees(File, JProgressBar)
      */
     private static void readFolder(File folder, JProgressBar bar) {
         for (File file : Objects.requireNonNull(folder.listFiles())) {
             if (!file.isDirectory()) {
-                String[] split = file.getName().split("\\.");
-                if (split[split.length - 1].equals("txt")) {
+                if (file.getName().endsWith(".txt")) { // Ignore les autres types de fichiers
                     try {
                         BufferedReader reader = new BufferedReader(new FileReader(file));
 
                         String line;
                         if ((line = reader.readLine()) != null) {
                             reader.close();
-                            if (line.startsWith("#")) {
-                                readHauteur(file, bar);
+                            if (line.startsWith("#")) { // = Fichier données gratuites
+                                readHauteurs(file, bar);
                             } else {
-                                readMarees(file, bar);
+                                readMarees(file, bar);  // = Fichier données payantes
                             }
                         } else {
                             reader.close();
@@ -100,7 +101,7 @@ public class ParsingData {
                     }
                 }
             } else {
-                readFolder(file, bar);
+                readFolder(file, bar);  //Appel récursif si le fichier est un dossier
             }
         }
     }
@@ -109,12 +110,14 @@ public class ParsingData {
     /**
      * Read data from given file as free data format (sea level hour by hour).
      * Create a new Port object if none exists or complete the corresponding one stored in objects-directory.
+     * Move file into output-directory when finished reading.
+     * Fulfill the given JProgressBar.
      *
      * @param file datafile to read
      * @param bar  JProgressBar to see the evolution
      * @see Port
      */
-    private static void readHauteur(File file, JProgressBar bar) {
+    private static void readHauteurs(File file, JProgressBar bar) {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String line;
@@ -126,7 +129,7 @@ public class ParsingData {
             int currentHour = 0;
 
             while ((line = reader.readLine()) != null) {
-                if (line.startsWith("#")) {
+                if (line.startsWith("#")) { // Ligne d'informations complémentaires (nom, coordonnées)
                     String[] split = line.split(" ");
                     switch (split[1]) {
                         case "Station":
@@ -151,7 +154,7 @@ public class ParsingData {
                             }
                             break;
                     }
-                } else if (line.endsWith("1")) {
+                } else if (line.endsWith("1")) {    // Ligne de données de source 1
                     String[] split = line.split(";");
                     String[] time = split[0].split(" ");
                     if (time[1].startsWith("0" + currentHour + ":00") || time[1].startsWith(currentHour + ":00")) {
@@ -172,12 +175,12 @@ public class ParsingData {
 
                     }
                 }
-                bar.setValue(bar.getValue() + 1);
+                bar.setValue(bar.getValue() + 1);   // Incrémente la barre de chargement
             }
             reader.close();
             port.setMap(map);
             LectureEcriture.ecriture(new File(Constantes.OBJ_FILE + port.getNom() + ".ser"), port);
-            file.renameTo(new File(Constantes.OUT_FILE + file.getName()));
+            file.renameTo(new File(Constantes.OUT_FILE + file.getName()));  // Déplace le fichier lu dans le dossier output
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -187,7 +190,8 @@ public class ParsingData {
     /**
      * Read data from given file as paying data format (high tide and low tide).
      * Create a new Port object if none exists or complete the corresponding one stored in objects-directory.
-     * Also fulfill the given JProgressBar
+     * Move file into output-directory when finished reading.
+     * Fulfill the given JProgressBar.
      *
      * @param file datafile to read
      * @see Port
@@ -236,7 +240,7 @@ public class ParsingData {
                         port.setLatitude(Float.parseFloat(lat[2]));
                         port.setLongitude(Float.parseFloat(lon[2]));
                     }
-                } else if (line.startsWith("2021")) {
+                } else if (line.startsWith("2021")) {   // Ne prend en compte que l'année 2021
                     String[] split = line.split("\t");
                     DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
                     LocalDate date = LocalDate.parse(split[0], format);
@@ -266,9 +270,8 @@ public class ParsingData {
     }
 
     /**
-     * Method called by readMarees to split and set Marees object.
-     * Create a new Port object if none exists or complete the corresponding one stored in objects-directory.
-     * Also fulfill the given JProgressBar
+     * Method called by readMarees to stock data in the given array.
+     * Stock in the following format : PM, BM, PB, BM
      *
      * @param split  splitted line with tide data
      * @param marees Array for the 4 tides of the day
@@ -291,37 +294,19 @@ public class ParsingData {
         }
     }
 
-
     /**
      * Method to get the total number of line that will be read in order to increase properly the JProgressBar
-     *
-     * @return int corresponding to the total of lines of all the files
-     * @see #getLinesOf(File)
-     */
-    private static int getTotalLines() {
-        File input = new File(Constantes.IN_FILE);
-
-        if (!input.exists()) {
-            if (!input.mkdir()) {
-                System.out.println("Problème de privilège, le dossier '" + Constantes.IN_FILE + "' recherché ne peut être créé");
-                System.exit(1);
-            }
-        }
-        return getLinesOf(input);
-    }
-
-    /**
      * Count the number of lines of a specific file.
-     * If this file is a directory, then count the lines of the files inside itself.
+     * If this file is a directory, then call recursively.
      *
      * @param folder File where to count the number of lines
      * @return number of lines of the file
      */
-    private static int getLinesOf(File folder) {
+    private static int getTotalLines(File folder) {
         int count = 0;
         for (File file : Objects.requireNonNull(folder.listFiles())) {
             if (file.isDirectory()) { // If directory
-                count += getLinesOf(file);
+                count += getTotalLines(file);
             } else if (file.getName().endsWith(".txt")) { //If file .txt
                 try {
                     BufferedReader reader = new BufferedReader(new FileReader(file));

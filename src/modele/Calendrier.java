@@ -6,7 +6,7 @@ import java.util.TreeSet;
 public class Calendrier {
 
     /**
-     * Only method of the class. It creates a TreeSet of LocalDates starting from the monday of the first week and ending 6 weeks after
+     * Only method of the class. It creates a TreeSet of LocalDate starting from the monday of the first week and ending 6 weeks after
      *
      * @param mois corresponding to the month you want
      * @return the created TreeSet with 42 dates in it

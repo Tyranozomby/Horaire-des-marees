@@ -1,8 +1,9 @@
 package vue;
 
-import control.MainController;
+import modele.Port;
 
 import javax.swing.*;
+import java.time.LocalDate;
 
 public class PanelDonnees extends JPanel {
 
@@ -10,7 +11,8 @@ public class PanelDonnees extends JPanel {
         setOpaque(false);
     }
 
-    public void addListener(MainController controller) {
-
+    public void setInfos(Port port, LocalDate date) {
+        System.out.println(port + " | " + date);
     }
+
 }

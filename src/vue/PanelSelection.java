@@ -29,16 +29,16 @@ public class PanelSelection extends JPanel {
     private final JLabel labelMois = new JLabel("", JLabel.CENTER);
 
     private LocalDate currentDate = LocalDate.now();
-    private int shownMonth = currentDate.getMonthValue();
-    private JButton selected;
+    private int currentMonth = currentDate.getMonthValue();
+    private JButton selectedButton;
 
     private final DateTimeFormatter format = DateTimeFormatter.ofPattern("EEEE d MMMM yyyy");
 
     private final PanelCalendrier[] calendriers = new PanelCalendrier[12];
     private final JButton[] boutonsNav = new JButton[Constantes.NOM_BOUTONS.length];
 
-    private final CardLayout layout = new CardLayout();
-    private final JPanel panelCentre = new JPanel(layout);
+    private final CardLayout layoutCal = new CardLayout();
+    private final JPanel panelCal = new JPanel(layoutCal);
 
     public PanelSelection() {
         setOpaque(false);
@@ -61,15 +61,17 @@ public class PanelSelection extends JPanel {
 
 
         // Panel CalendrierAct
-        panelCentre.setOpaque(false);
+        panelCal.setOpaque(false);
 
         for (int i = 0; i < 12; i++) {
             calendriers[i] = new PanelCalendrier(i + 1);
-            panelCentre.add(calendriers[i], Constantes.NOM_MOIS[i]);
+            panelCal.add(calendriers[i], Constantes.NOM_MOIS[i]);
         }
-        selected = calendriers[shownMonth - 1].getSelected();
-        panelCentre.setPreferredSize(new Dimension(540, 400));
-        layout.show(panelCentre, Constantes.NOM_MOIS[LocalDate.now().getMonthValue() - 1]);
+        JButton todayButt = new JButton();
+        todayButt.setActionCommand("Current " + currentDate.getDayOfMonth());
+        selectedButton = calendriers[currentMonth - 1].getActualButtonOf(todayButt);
+        panelCal.setPreferredSize(new Dimension(540, 400));
+        layoutCal.show(panelCal, Constantes.NOM_MOIS[LocalDate.now().getMonthValue() - 1]);
 
 
         // Panel Navigation
@@ -105,7 +107,7 @@ public class PanelSelection extends JPanel {
 
         // Ajout Panels
         add(panelNord, BorderLayout.NORTH);
-        add(panelCentre, BorderLayout.CENTER);
+        add(panelCal, BorderLayout.CENTER);
         add(panelSud, BorderLayout.SOUTH);
     }
 
@@ -122,26 +124,26 @@ public class PanelSelection extends JPanel {
         return (Port) comboBox.getSelectedItem();
     }
 
-    public JButton getSelected() {
-        return selected;
+    public JButton getSelectedButton() {
+        return selectedButton;
     }
 
-    public void setSelected(JButton selected) {
-        this.selected = selected;
+    public void setSelectedButton(JButton selectedButton) {
+        this.selectedButton = selectedButton;
     }
 
     public JButton getCurrentMonthButtonOf(JButton bouton) {
-        return calendriers[shownMonth - 1].getButtonOf(bouton);
+        return calendriers[currentMonth - 1].getActualButtonOf(bouton);
     }
 
     public int getMonth() {
-        return shownMonth;
+        return currentMonth;
     }
 
     public void setMonth(int mois) {
-        layout.show(panelCentre, Constantes.NOM_MOIS[mois - 1]);
+        layoutCal.show(panelCal, Constantes.NOM_MOIS[mois - 1]);
         labelMois.setText(Constantes.NOM_MOIS[mois - 1]);
-        shownMonth = mois;
+        currentMonth = mois;
     }
 
     public void addListener(MainController controller) {
