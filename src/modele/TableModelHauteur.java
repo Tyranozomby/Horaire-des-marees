@@ -46,7 +46,8 @@ public class TableModelHauteur implements TableModel {
                 return "PM";
             }
         }
-        return listeHauteur[rowIndex * 12 + (columnIndex - 1)];
+        float val = listeHauteur[rowIndex * 12 + (columnIndex - 1)];
+        return (float) Math.round(val * 100.0) / 100.0;
     }
 
     @Override

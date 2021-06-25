@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -157,7 +158,7 @@ public class ParsingData {
                 } else if (line.endsWith("1")) {    // Ligne de données de source 1
                     String[] split = line.split(";");
                     String[] time = split[0].split(" ");
-                    if (time[1].startsWith("0" + currentHour + ":00") || time[1].startsWith(currentHour + ":00")) {
+                    if (time[1].startsWith("0" + currentHour) || time[1].startsWith(String.valueOf(currentHour))) {
                         DateTimeFormatter format = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                         LocalDate date = LocalDate.parse(time[0], format);
                         if (map.containsKey(date)) {

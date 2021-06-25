@@ -40,41 +40,49 @@ public class TableModelMarees implements TableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        Marees PM = listeMarees[rowIndex * 2];
-        Marees BM = listeMarees[rowIndex * 2 + 1];
+        Marees mar;
+        if (columnIndex >= 3) {
+            mar = listeMarees[rowIndex * 2 + 1];
+        } else {
+            mar = listeMarees[rowIndex * 2];
+        }
+
+        if (mar == null) {
+            return "Truc";
+        }
 
         if (columnIndex == 0) {
-            LocalTime time = PM.getHeure();
+            LocalTime time = mar.getHeure();
             if (time != null) {
-                return time;
+                return time.toString();
             } else {
                 return "--:--";
             }
         } else if (columnIndex == 1) {
-            float hauteur = PM.getHauteur();
+            float hauteur = mar.getHauteur();
             if (hauteur != 0) {
-                return hauteur;
+                return String.valueOf(hauteur);
             } else {
                 return "--.--";
             }
         } else if (columnIndex == 2) {
-            int coeff = PM.getCoeff();
+            int coeff = mar.getCoeff();
             if (coeff != 0) {
-                return coeff;
+                return String.valueOf(coeff);
             } else {
                 return "---";
             }
         } else if (columnIndex == 3) {
             LocalTime time = BM.getHeure();
             if (time != null) {
-                return time;
+                return time.toString();
             } else {
                 return "--:--";
             }
         } else { //columnIndex == 4
-            float hauteur = BM.getHauteur();
+            float hauteur = mar.getHauteur();
             if (hauteur != 0) {
-                return hauteur;
+                return String.valueOf(hauteur);
             } else {
                 return "--.--";
             }

@@ -11,6 +11,11 @@ public class MareesCellRenderer implements TableCellRenderer {
 
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-        return null;
+
+        JLabel label = new JLabel((String) value,JLabel.CENTER);
+        label.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 15));
+
+
+        return label;
     }
 }
