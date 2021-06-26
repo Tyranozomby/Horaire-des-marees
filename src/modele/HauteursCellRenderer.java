@@ -17,7 +17,7 @@ public class HauteursCellRenderer implements TableCellRenderer {
         JLabel label = new JLabel("", JLabel.CENTER);
         label.setOpaque(true);
 
-        if (value.getClass() == Double.class) {
+        if (value.getClass() == Double.class || value.equals("---")) {
             label.setText(String.valueOf(value));
             label.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 15));
             label.setBackground(Color.WHITE);

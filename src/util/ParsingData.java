@@ -127,7 +127,8 @@ public class ParsingData {
             HashMap<LocalDate, Donnees> map = new HashMap<>();
 
             boolean newPort = true;
-            int currentHour = 0;
+            int currentHour;
+            int previousHour = -1;
 
             while ((line = reader.readLine()) != null) {
                 if (line.startsWith("#")) { // Ligne d'informations complémentaires (nom, coordonnées)
@@ -158,9 +159,14 @@ public class ParsingData {
                 } else if (line.endsWith("1")) {    // Ligne de données de source 1
                     String[] split = line.split(";");
                     String[] time = split[0].split(" ");
-                    if (time[1].startsWith("0" + currentHour) || time[1].startsWith(String.valueOf(currentHour))) {
+                    String[] hour = time[1].split(":");
+
+                    currentHour = Integer.parseInt(hour[0], 10);
+
+                    if (currentHour != previousHour) {
                         DateTimeFormatter format = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                         LocalDate date = LocalDate.parse(time[0], format);
+
                         if (map.containsKey(date)) {
                             float[] hauteurs = map.get(date).getHauteurs();
                             hauteurs[currentHour] = Float.parseFloat(split[1]);
@@ -172,8 +178,7 @@ public class ParsingData {
                             donnees.setHauteurs(hauteurs);
                             map.put(date, donnees);
                         }
-                        currentHour = (currentHour + 1) % 24;
-
+                        previousHour = currentHour;
                     }
                 }
                 bar.setValue(bar.getValue() + 1);   // Incrémente la barre de chargement

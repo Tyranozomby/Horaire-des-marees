@@ -26,11 +26,12 @@ public class PanelSelection extends JPanel {
     private final JComboBox<Port> comboBox;
 
     private final JLabel labelDate = new JLabel();
+    private final JLabel labelCo = new JLabel("", JLabel.CENTER);
     private final JLabel labelMois = new JLabel("", JLabel.CENTER);
 
     private LocalDate currentDate = LocalDate.now();
     private int currentMonth = currentDate.getMonthValue();
-    private JButton selectedButton;
+    private JButton selectedButton = new JButton();
 
     private final DateTimeFormatter format = DateTimeFormatter.ofPattern("EEEE d MMMM yyyy");
 
@@ -55,8 +56,15 @@ public class PanelSelection extends JPanel {
 
         c.insets = new Insets(20, 0, 0, 0);
         c.gridy = 1;
+        Port port = (Port) comboBox.getSelectedItem();
+        assert port != null;
+        setLabelCo(port);
+        labelCo.setFont(Constantes.TITLE_FONT);
+        panelNord.add(labelCo, c);
+
+        c.gridy = 2;
         labelDate.setText(currentDate.format(format));
-        labelDate.setFont(Constantes.DATE_FONT);
+        labelDate.setFont(Constantes.TITLE_FONT);
         panelNord.add(labelDate, c);
 
 
@@ -67,9 +75,6 @@ public class PanelSelection extends JPanel {
             calendriers[i] = new PanelCalendrier(i + 1);
             panelCal.add(calendriers[i], Constantes.NOM_MOIS[i]);
         }
-        JButton todayButt = new JButton();
-        todayButt.setActionCommand("Current " + currentDate.getDayOfMonth());
-        selectedButton = calendriers[currentMonth - 1].getActualButtonOf(todayButt);
         layoutCal.show(panelCal, Constantes.NOM_MOIS[LocalDate.now().getMonthValue() - 1]);
 
 
@@ -88,9 +93,9 @@ public class PanelSelection extends JPanel {
             panelSud.add(boutonsNav[i], c);
         }
 
-        c.gridx = 2;    // Mois affiché
-        labelMois.setText(Constantes.NOM_MOIS[currentDate.getMonthValue() - 1]);
-        labelMois.setFont(Constantes.DATE_FONT);
+        c.gridx = 2;
+        labelMois.setText(Constantes.NOM_MOIS[currentDate.getMonthValue() - 1]);    // Mois affiché
+        labelMois.setFont(Constantes.TITLE_FONT);
         labelMois.setPreferredSize(new Dimension(110, 20));
         panelSud.add(labelMois, c);
 
@@ -121,6 +126,10 @@ public class PanelSelection extends JPanel {
 
     public Port getPort() {
         return (Port) comboBox.getSelectedItem();
+    }
+
+    public void setLabelCo(Port port) {
+        labelCo.setText("Coordonnées: " + port.getLongitude() + " | " + port.getLatitude());
     }
 
     public JButton getSelectedButton() {

@@ -47,7 +47,10 @@ public class TableModelHauteur implements TableModel {
             }
         }
         float val = listeHauteur[rowIndex * 12 + (columnIndex - 1)];
-        return (float) Math.round(val * 100.0) / 100.0;
+        if (val == 0.0) {
+            return "---";
+        }
+        return (float) Math.round(val * 100.0) / 100.0; // Arrondi au centième
     }
 
     @Override

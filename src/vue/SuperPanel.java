@@ -18,8 +18,6 @@ public class SuperPanel extends JPanel {
         setBackground(Constantes.BG_COLOR);
         setLayout(new BorderLayout());
 
-        selection.setPreferredSize(new Dimension(540, 720));
-        donnees.setPreferredSize(new Dimension(540, 500));
 
         add(selection, BorderLayout.WEST);
         add(donnees, BorderLayout.EAST);

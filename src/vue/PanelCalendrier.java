@@ -83,6 +83,6 @@ public class PanelCalendrier extends JPanel {
 
     @Override
     public Insets getInsets() {
-        return new Insets(30, 50, 30, 50);
+        return new Insets(10, 50, 30, 50);
     }
 }

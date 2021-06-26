@@ -3,7 +3,10 @@ package constantes;
 import java.awt.*;
 
 public interface Constantes {
-    Color BG_COLOR = new Color(170, 185, 185);
+
+//    Color BG_COLOR = new Color(170, 185, 185);
+    Color BG_COLOR = new Color(200, 200, 200);
+    Font TITLE_FONT = new Font(Font.SANS_SERIF, Font.BOLD, 20);
 
     // Parsing / Lecture / Écriture
     String OUT_FILE = "output/";
@@ -20,9 +23,7 @@ public interface Constantes {
     Color SELECT_COL = new Color(0, 140, 165);
     Color CURRENT_MONTH_COL = new Color(0, 205, 220);
 
-    Font DATE_FONT = new Font(Font.SANS_SERIF, Font.BOLD, 20);
-
     // Affichage données
     Font HEADER_FONT = new Font(Font.SANS_SERIF, Font.BOLD, 15);
-    Color HEADER_BG = Color.LIGHT_GRAY;
+    Color HEADER_BG = new Color(0, 205, 220);
 }
