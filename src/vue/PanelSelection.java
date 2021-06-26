@@ -70,7 +70,6 @@ public class PanelSelection extends JPanel {
         JButton todayButt = new JButton();
         todayButt.setActionCommand("Current " + currentDate.getDayOfMonth());
         selectedButton = calendriers[currentMonth - 1].getActualButtonOf(todayButt);
-        panelCal.setPreferredSize(new Dimension(540, 400));
         layoutCal.show(panelCal, Constantes.NOM_MOIS[LocalDate.now().getMonthValue() - 1]);
 
 
@@ -80,7 +79,7 @@ public class PanelSelection extends JPanel {
         c.gridy = 0;
         c.insets = new Insets(5, 5, 5, 5);
 
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < Constantes.NOM_BOUTONS.length / 2; i++) {   // < et <<
             c.gridx = i;
             JButton bouton = new JButton(Constantes.NOM_BOUTONS[i]);
             bouton.setPreferredSize(new Dimension(50, 30));
@@ -89,13 +88,13 @@ public class PanelSelection extends JPanel {
             panelSud.add(boutonsNav[i], c);
         }
 
-        c.gridx = 2;
+        c.gridx = 2;    // Mois affiché
         labelMois.setText(Constantes.NOM_MOIS[currentDate.getMonthValue() - 1]);
         labelMois.setFont(Constantes.DATE_FONT);
         labelMois.setPreferredSize(new Dimension(110, 20));
         panelSud.add(labelMois, c);
 
-        for (int i = 2; i < Constantes.NOM_BOUTONS.length; i++) {
+        for (int i = 2; i < Constantes.NOM_BOUTONS.length; i++) {   // >> et >
             c.gridx = i + 1;
             JButton bouton = new JButton(Constantes.NOM_BOUTONS[i]);
             bouton.setPreferredSize(new Dimension(50, 30));

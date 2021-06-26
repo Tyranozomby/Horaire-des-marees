@@ -1,12 +1,12 @@
 package vue;
 
+import constantes.Constantes;
 import modele.*;
 
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.time.LocalDate;
-import java.util.Arrays;
 
 public class PanelDonnees extends JPanel {
 
@@ -20,22 +20,32 @@ public class PanelDonnees extends JPanel {
     public PanelDonnees() {
         setOpaque(false);
         setLayout(new GridBagLayout());
-        setPreferredSize(new Dimension(540, 720));
 
         GridBagConstraints c = new GridBagConstraints();
 
-        tableauMarees.setDefaultRenderer(Object.class, new MareesCellRenderer());
-        tableauHauteurs.setDefaultRenderer(Object.class, new HauteursCellRenderer());
+        // MARÉES
 
+        tableauMarees.setDefaultRenderer(Object.class, new MareesCellRenderer());
 
         tableauMarees.getTableHeader().setPreferredSize(new Dimension(10, 30));
+        tableauMarees.getTableHeader().setBackground(Constantes.HEADER_BG);
+        tableauMarees.getTableHeader().setFont(Constantes.HEADER_FONT);
         TableColumnModel cm = tableauMarees.getColumnModel();
         for (int i = 0; i < cm.getColumnCount(); i++) {
             cm.getColumn(i).setPreferredWidth(50);
         }
         tableauMarees.setRowHeight(30);
 
+        JScrollPane paneMarees = new JScrollPane(tableauMarees);
+        paneMarees.setPreferredSize(new Dimension(520, 93));
+
+        // HAUTEURS
+
+        tableauHauteurs.setDefaultRenderer(Object.class, new HauteursCellRenderer());
+
         tableauHauteurs.getTableHeader().setPreferredSize(new Dimension(10, 30));
+        tableauHauteurs.getTableHeader().setBackground(Constantes.HEADER_BG);
+        tableauHauteurs.getTableHeader().setFont(Constantes.HEADER_FONT);
         cm = tableauHauteurs.getColumnModel();
         cm.getColumn(0).setPreferredWidth(60);
         for (int i = 1; i < cm.getColumnCount(); i++) {
@@ -43,11 +53,10 @@ public class PanelDonnees extends JPanel {
         }
         tableauHauteurs.setRowHeight(30);
 
-        JScrollPane paneMarees = new JScrollPane(tableauMarees);
-        paneMarees.setPreferredSize(new Dimension(520, 93));
-
         JScrollPane paneHauteurs = new JScrollPane(tableauHauteurs);
         paneHauteurs.setPreferredSize(new Dimension(520, 93));
+
+        // AJOUT
 
         c.gridy = 0;
         add(new JLabel("Marées"), c);
@@ -69,9 +78,6 @@ public class PanelDonnees extends JPanel {
         }
     }
 
-    @Override
-    public Insets getInsets() {
-        return new Insets(0, 0, 0, 0);
-    }
+
 
 }

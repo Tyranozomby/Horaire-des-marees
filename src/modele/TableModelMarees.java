@@ -48,7 +48,7 @@ public class TableModelMarees implements TableModel {
         }
 
         if (mar == null) {
-            return "Truc";
+            return "///";
         }
 
         if (columnIndex == 0) {

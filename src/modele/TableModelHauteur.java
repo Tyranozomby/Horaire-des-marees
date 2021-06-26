@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class TableModelHauteur implements TableModel {
 
     private float[] listeHauteur = new float[24];
-    private static final String[] header = {"Heure:", "0h", "1h", "2h", "3h", "4h", "5h", "6h", "7h", "8h", "9h", "10h", "11h",};
+    private static final String[] header = {"<html><u>Heure:</u></html>", "0h", "1h", "2h", "3h", "4h", "5h", "6h", "7h", "8h", "9h", "10h", "11h",};
 
     private final ArrayList<TableModelListener> listeners = new ArrayList<>();
 

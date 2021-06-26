@@ -1,8 +1,9 @@
 package vue;
 
-import javax.swing.JPanel;
-import java.awt.Color;
-import java.awt.BorderLayout;
+import constantes.Constantes;
+
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * Main panel.<br/>
@@ -14,8 +15,11 @@ public class SuperPanel extends JPanel {
     private final PanelDonnees donnees = new PanelDonnees();
 
     public SuperPanel() {
-        setBackground(new Color(170, 185, 185));
+        setBackground(Constantes.BG_COLOR);
         setLayout(new BorderLayout());
+
+        selection.setPreferredSize(new Dimension(540, 720));
+        donnees.setPreferredSize(new Dimension(540, 500));
 
         add(selection, BorderLayout.WEST);
         add(donnees, BorderLayout.EAST);

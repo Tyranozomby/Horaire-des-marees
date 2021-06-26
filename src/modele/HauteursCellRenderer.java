@@ -1,5 +1,7 @@
 package modele;
 
+import constantes.Constantes;
+
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
@@ -18,10 +20,11 @@ public class HauteursCellRenderer implements TableCellRenderer {
         if (value.getClass() == Double.class) {
             label.setText(String.valueOf(value));
             label.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 15));
+            label.setBackground(Color.WHITE);
         } else {
             label.setText((String) value);
-            label.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 15));
-            label.setBackground(Color.LIGHT_GRAY);
+            label.setFont(Constantes.HEADER_FONT);
+            label.setBackground(Constantes.HEADER_BG);
         }
 
         return label;
