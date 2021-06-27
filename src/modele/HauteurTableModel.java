@@ -5,7 +5,12 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 import java.util.ArrayList;
 
-public class TableModelHauteur implements TableModel {
+/**
+ * TableModel pour le tableau des hauteurs.
+ *
+ * @see HauteursCellRenderer
+ */
+public class HauteurTableModel implements TableModel {
 
     private float[] listeHauteur = new float[24];
     private static final String[] header = {"<html><u>Heure:</u></html>", "0h", "1h", "2h", "3h", "4h", "5h", "6h", "7h", "8h", "9h", "10h", "11h",};
@@ -68,6 +73,11 @@ public class TableModelHauteur implements TableModel {
         listeners.remove(l);
     }
 
+    /**
+     * Modifie le contenu du tableau.
+     *
+     * @param list la liste des nouvelles valeurs.
+     */
     public void setListeHauteurs(float[] list) {
         listeHauteur = list;
         for (TableModelListener listener : listeners) {

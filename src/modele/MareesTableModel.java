@@ -6,7 +6,7 @@ import javax.swing.table.TableModel;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
-public class TableModelMarees implements TableModel {
+public class MareesTableModel implements TableModel {
 
     private Marees[] listeMarees = new Marees[4];
     private static final String[] header = {"Heure (PM)", "Hauteur (PM)", "Coeff (PM)", "Heure (BM)", "Hauteur (BM)"};
@@ -103,6 +103,11 @@ public class TableModelMarees implements TableModel {
         listeners.remove(l);
     }
 
+    /**
+     * Modifie le contenu du tableau.
+     *
+     * @param list la liste des marées.
+     */
     public void setListeMarees(Marees[] list) {
         listeMarees = list;
         for (TableModelListener listener : listeners) {

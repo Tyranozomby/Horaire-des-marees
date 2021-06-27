@@ -14,10 +14,10 @@ import java.util.Objects;
 public class LectureEcriture {
 
     /**
-     * Méthode de lecture d’un fichier
+     * Méthode de lecture d’un fichier.
      *
-     * @param file : le fichier lu
-     * @return l’objet lu
+     * @param file le fichier lu.
+     * @return l’objet lu.
      */
     public static Object lecture(File file) {
         Object objetLu = null;
@@ -35,8 +35,8 @@ public class LectureEcriture {
     /**
      * Méthode d’écriture dans un fichier
      *
-     * @param file   : le fichier dans lequel on écrit
-     * @param object : l’objet écrit dans le fichier
+     * @param file   le fichier d'écriture.
+     * @param object l’objet à écrire.
      */
     public static void ecriture(File file, Object object) {
         try {
@@ -50,7 +50,13 @@ public class LectureEcriture {
         }
     }
 
-
+    /**
+     * Méthode pour lire tous les objets d'un fichier.
+     *
+     * @param folder le fichier de lecture.
+     * @return un tableau contenant les ports lus.
+     * @see Port
+     */
     public static Port[] lireTout(File folder) {
         ArrayList<Port> liste = new ArrayList<>();
         for (File file : Objects.requireNonNull(folder.listFiles())) {

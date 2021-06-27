@@ -3,6 +3,9 @@ package modele;
 import java.io.Serializable;
 import java.time.LocalTime;
 
+/**
+ * Classe représentant une marée. Elle est composé d'une heure, d'une hauteur ainsi que d'un coefficient.
+ */
 public class Marees implements Serializable {
 
     private final LocalTime heure;

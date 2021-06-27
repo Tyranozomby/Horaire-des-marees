@@ -4,7 +4,9 @@ import java.io.Serializable;
 import java.util.Arrays;
 
 /**
+ * Classe représentant un donnée. Elle est composée de 4 marées ainsi que de 24 hauteurs.
  *
+ * @see Marees
  */
 public class Donnees implements Serializable {
 

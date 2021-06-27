@@ -21,7 +21,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Panel displayed when reading the datafiles
+ * Panel affiché pendant la lecture des données.
  */
 public class PanelChargement extends JPanel {
 
@@ -56,7 +56,6 @@ public class PanelChargement extends JPanel {
         label.setForeground(new Color(0, 255, 255));
         foot.add(label, BorderLayout.LINE_START);
 
-
         //AJOUT TOUT
         this.add(mid, BorderLayout.CENTER);
         this.add(foot, BorderLayout.PAGE_END);
@@ -68,9 +67,9 @@ public class PanelChargement extends JPanel {
     }
 
     /**
-     * Method for the background image
+     * Méthode pour l'image de fond.
      *
-     * @param g Graphics component
+     * @param g composant de la classe Graphics.
      * @see Graphics
      */
     @Override

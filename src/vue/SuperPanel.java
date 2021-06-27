@@ -2,12 +2,12 @@ package vue;
 
 import constantes.Constantes;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JPanel;
+import java.awt.BorderLayout;
 
 /**
- * Main panel.<br/>
- * Contain panel for port or date selection and display panel.
+ * Panel principal.<br/>
+ * Contient les panels de sélection et d'affichage des données.
  */
 public class SuperPanel extends JPanel {
 

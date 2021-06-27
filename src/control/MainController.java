@@ -4,25 +4,26 @@ import constantes.Constantes;
 import util.ParsingData;
 import vue.*;
 
+import javax.swing.JFrame;
+import javax.swing.JComponent;
 import javax.swing.JButton;
+import javax.swing.KeyStroke;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 /**
- * Class used to start the program.<br/>
- * Main class of the project.
- * Create the window and link the selection of port or date with data displaying.<br/>
- * Use a thread to read datafiles while having a moving loading bar.
+ * Classe principale, utilisée pour lancer le projet.<br/>
+ * Crée la fenêtre et lie la selection de port ou de date avec l'affichage des données.<br/>
+ * Utilise un thread to pour les fichiers de données, tout en incrémentant une barre de progression.
  *
  * @author <b>Eliott ROGEAUX</b> & <b>Stéphane LAY</b> → <u>INF1-A1</u>
  */
-public class MainController implements ActionListener, KeyListener {
+public class MainController implements ActionListener {
 
     private PanelSelection selectPanel;
     private PanelDonnees dataPanel;
@@ -39,13 +40,13 @@ public class MainController implements ActionListener, KeyListener {
             dataPanel = superPanel.getDataPanel();
 
             selectPanel.addListener(this);
-            JButton today = new JButton();
-            today.setActionCommand("Current " + LocalDate.now().getDayOfMonth());
-            buttonClicked(selectPanel.getCurrentMonthButtonOf(today));
+            dateChange(selectPanel.getButtonOfDay(LocalDate.now().getDayOfMonth()));
 
             mere.setContentPane(superPanel); //Affiche le panel principal
             mere.validate(); //Valide la modification
-            mere.addKeyListener(this);
+
+            // Équivalent à un keyListener
+            keyListener(mere);
         }).start();
 
     }
@@ -57,7 +58,7 @@ public class MainController implements ActionListener, KeyListener {
         int currentMonth = selectPanel.getMonth();
 
         if (command.contains(" ")) {
-            buttonClicked((JButton) e.getSource());
+            dateChange((JButton) e.getSource());
         } else if (command.equals("Port")) {
             selectPanel.setLabelCo(selectPanel.getPort());
             dataPanel.setInfos(selectPanel.getPort(), selectPanel.getDate());
@@ -74,62 +75,78 @@ public class MainController implements ActionListener, KeyListener {
         }
     }
 
-    private void buttonClicked(JButton button) {
+    /**
+     * Détecte la date sélectionnée et change l'affichage du calendrier.
+     *
+     * @param button JButton du calendrier.
+     */
+    private void dateChange(JButton button) {
         String command = button.getActionCommand();
         int currentMonth = selectPanel.getMonth();
 
         String[] split = command.split(" ");
-        String type = split[0];
         int dayNum = Integer.parseInt(split[1]);
 
         DateTimeFormatter format = DateTimeFormatter.ofPattern("d M yyyy");
         LocalDate newDate;
 
-        if (type.equals("Previous")) {
+        if (command.startsWith("Previous ")) {
             currentMonth--;
-            selectPanel.setMonth(currentMonth);
-            button = selectPanel.getCurrentMonthButtonOf(button);
-        } else if (type.equals("Next")) {
+        } else if (command.startsWith("Next ")) {
             currentMonth++;
-            selectPanel.setMonth(currentMonth);
-            button = selectPanel.getCurrentMonthButtonOf(button);
         }
         newDate = LocalDate.parse(dayNum + " " + currentMonth + " 2021", format);
 
+        selectPanel.setMonth(currentMonth);
+        button = selectPanel.getButtonOfDay(dayNum);
         selectPanel.getSelectedButton().setBackground(Constantes.CURRENT_MONTH_COL);
         selectPanel.setSelectedButton(button);
-        button.setBackground(Constantes.SELECT_COL);
         selectPanel.setDate(newDate);
+
+        button.setBackground(Constantes.SELECT_COL);
         dataPanel.setInfos(selectPanel.getPort(), selectPanel.getDate());
     }
 
-    @Override
-    public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_RIGHT)
-            System.out.println("Droite");
-        else if (e.getKeyCode() == KeyEvent.VK_LEFT)
-            System.out.println("Gauche");
-        else if (e.getKeyCode() == KeyEvent.VK_DOWN)
-            System.out.println("Bas");
-        else if (e.getKeyCode() == KeyEvent.VK_UP)
-            System.out.println("Haut");
+    /**
+     * Méthode appelée quand une des clés enregistrées a été pressée.
+     * Permet de se déplacer dans le calendrier avec gauche and droite ou de changer le port avec haut et bas.
+     *
+     * @param key valeur entière de la clé.
+     */
+    public void keyPressed(int key) {
+        JButton retour = null;
+
+        if (key == KeyEvent.VK_RIGHT)
+            retour = selectPanel.leftRight(selectPanel.getDate().plusDays(1));
+        else if (key == KeyEvent.VK_LEFT)
+            retour = selectPanel.leftRight(selectPanel.getDate().minusDays(1));
+        else if (key == KeyEvent.VK_DOWN)
+            selectPanel.down();
+        else if (key == KeyEvent.VK_UP)
+            selectPanel.up();
+
+        if (retour != null)
+            dateChange(retour);
+
     }
 
-    @Override
-    public void keyTyped(KeyEvent e) {
-
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-
+    /**
+     * Clés que nous voulons écouter.
+     *
+     * @param mere fenêtre principale.
+     */
+    public void keyListener(JFrame mere) {
+        mere.getRootPane().registerKeyboardAction(e -> keyPressed(KeyEvent.VK_LEFT), KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
+        mere.getRootPane().registerKeyboardAction(e -> keyPressed(KeyEvent.VK_RIGHT), KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
+        mere.getRootPane().registerKeyboardAction(e -> keyPressed(KeyEvent.VK_UP), KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
+        mere.getRootPane().registerKeyboardAction(e -> keyPressed(KeyEvent.VK_DOWN), KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
     }
 
 
     /**
-     * Method to start the program
+     * Méthode pour lancer le programme.
      *
-     * @param args not used
+     * @param args pas utilisés.
      */
     public static void main(String[] args) {
         new MainController();

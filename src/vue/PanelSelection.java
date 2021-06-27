@@ -21,6 +21,11 @@ import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Panel de sélection des données.<br/>
+ * Un des panel principaux. Il contient un calendrier et une JComboBox avec les ports.<br/>
+ * Le calendrier est accompagné de boutons de navigation mais l'utilisation des flèches gauche et droite fonctionne aussi.
+ */
 public class PanelSelection extends JPanel {
 
     private final JComboBox<Port> comboBox;
@@ -57,11 +62,15 @@ public class PanelSelection extends JPanel {
         c.insets = new Insets(20, 0, 0, 0);
         c.gridy = 1;
         Port port = (Port) comboBox.getSelectedItem();
-        assert port != null;
+        if (port == null) {
+            System.err.println("Aucun objet en mémoire, veuillez insérer des données");
+            System.exit(4);
+        }
         setLabelCo(port);
         labelCo.setFont(Constantes.TITLE_FONT);
         panelNord.add(labelCo, c);
 
+        c.insets = new Insets(30, 0, 0, 0);
         c.gridy = 2;
         labelDate.setText(currentDate.format(format));
         labelDate.setFont(Constantes.TITLE_FONT);
@@ -115,6 +124,8 @@ public class PanelSelection extends JPanel {
         add(panelSud, BorderLayout.SOUTH);
     }
 
+    // SETTERS / GETTERS
+
     public LocalDate getDate() {
         return currentDate;
     }
@@ -140,8 +151,8 @@ public class PanelSelection extends JPanel {
         this.selectedButton = selectedButton;
     }
 
-    public JButton getCurrentMonthButtonOf(JButton bouton) {
-        return calendriers[currentMonth - 1].getActualButtonOf(bouton);
+    public JButton getButtonOfDay(int jour) {
+        return calendriers[currentMonth - 1].getButtonOf(jour);
     }
 
     public int getMonth() {
@@ -152,6 +163,65 @@ public class PanelSelection extends JPanel {
         layoutCal.show(panelCal, Constantes.NOM_MOIS[mois - 1]);
         labelMois.setText(Constantes.NOM_MOIS[mois - 1]);
         currentMonth = mois;
+    }
+
+    // AUTRES MÉTHODES
+
+    /**
+     * Méthode pour utiliser le port dans la JComboBox précédent.
+     */
+    public void up() {
+        int i = comboBox.getSelectedIndex();
+        if (i != 0) {
+            comboBox.setSelectedIndex(i - 1);
+        }
+    }
+
+    /**
+     * Méthode pour utiliser le port dans la JComboBox suivant.
+     */
+    public void down() {
+        int i = comboBox.getSelectedIndex();
+        if (i < comboBox.getItemCount() - 1) {
+            comboBox.setSelectedIndex(i + 1);
+        }
+    }
+
+    /**
+     * Méthode pour naviguer dans les dates de gauche à droite.<br/>
+     * Augmente ou réduit le jour de 1 en fonction de la sélection actuelle.
+     *
+     * @param newDate la nouvelle date, veille ou lendemain.
+     * @return le bouton correspondant à la date donnée.
+     */
+    public JButton leftRight(LocalDate newDate) {
+        int mois = currentDate.getMonthValue();
+        String command;
+        JButton find = null;
+
+        if (newDate.getYear() == 2021) {
+            if (newDate.getMonthValue() < mois) {
+                command = "Previous " + newDate.getDayOfMonth();
+                mois--;
+            } else if (newDate.getMonthValue() > mois) {
+                command = "Next " + newDate.getDayOfMonth();
+                mois++;
+            } else {
+                command = "Current " + newDate.getDayOfMonth();
+            }
+            find = calendriers[mois - 1].getButtonOf(command);
+
+            if (find == null) {
+                if (command.startsWith("Previous ")) {
+                    setMonth(mois);
+                } else if (command.startsWith("Next ")) {
+                    setMonth(mois);
+                }
+                command = "Current " + newDate.getDayOfMonth();
+                find = calendriers[mois - 1].getButtonOf(command);
+            }
+        }
+        return find;
     }
 
     public void addListener(MainController controller) {

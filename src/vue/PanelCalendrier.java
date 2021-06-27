@@ -4,11 +4,22 @@ import constantes.Constantes;
 import control.MainController;
 import modele.Calendrier;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JPanel;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+
+import java.awt.GridLayout;
+import java.awt.Insets;
+
 import java.time.LocalDate;
 import java.util.TreeSet;
 
+/**
+ * Classe pour créer un calendrier de boutons correspondant à un mois donné.<br/>
+ * Utilise la classe Calendrier pour récupérer les dates.<br/>
+ *
+ * @see Calendrier
+ */
 public class PanelCalendrier extends JPanel {
 
     private final JButton[] boutons = new JButton[42];
@@ -16,11 +27,10 @@ public class PanelCalendrier extends JPanel {
     public PanelCalendrier(int mois) {
         setOpaque(false);
         setLayout(new GridLayout(0, 7, 8, 8));
-        LocalDate today = LocalDate.now();
         TreeSet<LocalDate> dates = Calendrier.getDates(mois);
 
         for (String day : Constantes.NOM_JOURS) {
-            JLabel label = new JLabel("<HTML><U>" + day + "</U></HTML>", JLabel.CENTER);
+            JLabel label = new JLabel("<html><u>" + day + "</u></hmtl>", JLabel.CENTER);
             add(label);
         }
 
@@ -46,30 +56,44 @@ public class PanelCalendrier extends JPanel {
                 bouton.setActionCommand("Current " + bouton.getText());
             }
 
-            if (date.equals(today)) {
-                bouton.setBackground(Constantes.SELECT_COL);
-            }
-
             boutons[indice] = bouton;
             indice++;
             add(bouton);
         }
     }
 
-    public JButton getActualButtonOf(JButton src) {
+    /**
+     * Méthode pour récupérer le bouton correspondant au jour demandé dans le mois actuel.<br/>
+     *
+     * @param jour le jour voulu
+     * @return le bouton à définir comme actuel ou null.
+     */
+    public JButton getButtonOf(int jour) {
         for (JButton dest : boutons) {
             String cmdDest = dest.getActionCommand();
             if (cmdDest.startsWith("Current")) {
-                String cmdSrc = src.getActionCommand();
 
                 String[] split = cmdDest.split(" ");
-                String dayDest = split[1];
+                int dayDest = Integer.parseInt(split[1]);
 
-                split = cmdSrc.split(" ");
-                String daySrc = split[1];
-
-                if (dayDest.equals(daySrc))
+                if (dayDest == jour)
                     return dest;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Méthode pour trouver le bouton avec la commande donnée.<br/>
+     * Utilisé pour le déplacement avec les flèches.
+     *
+     * @param command la commande à comparer.
+     * @return le bouton correspondant ou null.
+     */
+    public JButton getButtonOf(String command) {
+        for (JButton butt : boutons) {
+            if (butt.getActionCommand().equals(command)) {
+                return butt;
             }
         }
         return null;

@@ -4,6 +4,11 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashMap;
 
+/**
+ * Classe représentant un port. Il est caractérisé par un nom, une longitude et une latitude, ainsi qu'une HashMap de Données triées par LocalDate.
+ *
+ * @see Donnees
+ */
 public class Port implements Serializable {
 
     private String nom;
@@ -32,10 +37,6 @@ public class Port implements Serializable {
 
     public HashMap<LocalDate, Donnees> getMap() {
         return map;
-    }
-
-    public Donnees getDonnees(LocalDate date) {
-        return map.get(date);
     }
 
     public void setNom(String nom) {

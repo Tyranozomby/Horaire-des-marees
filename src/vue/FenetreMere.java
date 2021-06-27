@@ -3,7 +3,7 @@ package vue;
 import javax.swing.JFrame;
 
 /**
- * Window for the project.
+ * Unique fenêtre du projet.
  */
 public class FenetreMere extends JFrame {
 

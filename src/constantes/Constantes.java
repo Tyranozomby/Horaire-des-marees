@@ -1,10 +1,14 @@
 package constantes;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
 
+/**
+ * Constantes du projet
+ */
 public interface Constantes {
 
-//    Color BG_COLOR = new Color(170, 185, 185);
+    // Global
     Color BG_COLOR = new Color(200, 200, 200);
     Font TITLE_FONT = new Font(Font.SANS_SERIF, Font.BOLD, 20);
 

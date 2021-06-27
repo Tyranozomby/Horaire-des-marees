@@ -1,3 +1,4 @@
 Code 1 : One of the required directories between input, output and objects is missing and can't be created.
 Code 2 : Error occured when trying to read an object .ser
 Code 3 : Error occured when trying to write an object .ser
+Code 4 : No object has been found in the object-directory.

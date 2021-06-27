@@ -2,12 +2,18 @@ package modele;
 
 import constantes.Constantes;
 
-import javax.swing.*;
+import javax.swing.JTable;
+import javax.swing.JLabel;
 import javax.swing.table.TableCellRenderer;
-import java.awt.*;
+
+import java.awt.Component;
+import java.awt.Color;
+import java.awt.Font;
 
 /**
- * CellRenderer for sea level table
+ * TableCellRenderer pour le tableau des hauteurs
+ *
+ * @see HauteurTableModel
  */
 public class HauteursCellRenderer implements TableCellRenderer {
 

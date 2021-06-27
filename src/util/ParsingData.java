@@ -15,22 +15,22 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Objects;
 
 /**
- * Class with static methods to read the datafiles inside the input-directory then convert them into Port objects and stock those into objects-directory
- * Then move the files into the output-directory
+ * Classe avec des méthodes statiques pour lire les fichiers de données dans le dossier <i>input</i>, puis les convertir en ports et les stocker dans le dossier <i>objects</i>.
+ * <br/>
+ * Déplace ensuite les fichiers lus dans le dossier <i>output</i>.
  */
 public class ParsingData {
 
     /**
-     * Main method of the class.
-     * This method call all that is necessary to create or complete objects with the datafiles in input-directory
-     * By itself, this method checks if all required directories are here and start to read input-directory.
+     * Méthode principale de la classe.<br/>
+     * Elle vérifie la présence des dossier nécessaires puis commence la lecture des fichiers présents.<br/>
+     * Elle incrémente aussi une barre de chargement pour voir l'avancement de la lecture.<br/>
      *
-     * @param bar JProgressBar to see the evolution
+     * @param bar JProgressBar
      * @see #readFolder(File, JProgressBar)
      */
     public static void read(JProgressBar bar) {
@@ -62,7 +62,7 @@ public class ParsingData {
         if (totalLines != 0) {
             bar.setMaximum(totalLines);
             readFolder(input, bar);
-        } else {
+        } else { // Rien à lire
             bar.setMaximum(100);
             bar.setValue(100);
         }
@@ -70,12 +70,12 @@ public class ParsingData {
 
 
     /**
-     * Read all files of input directory and even those inside another directory.
-     * Then, read .txt files and start to read as free or paying datafile.
-     * Expects that all datafiles have the required format.
+     * Lit tous les fichiers du dossier <i>input</i> et même ceux des dossiers à l'intérieur.<br/>
+     * Ensuite, lit les fichiers .txt et commence à les parser en tant que gratuites ou payantes.<br/>
+     * On s'attend à ce que tous les fichiers .txt soient des données et au format requis.<br/>
      *
-     * @param folder Directory where to look for files to read
-     * @param bar    JProgressBar to see the evolution
+     * @param folder dossier dans lequel lire.
+     * @param bar    JProgressBar pour voir l'évolution.
      * @see #readHauteurs(File, JProgressBar)
      * @see #readMarees(File, JProgressBar)
      */
@@ -109,13 +109,13 @@ public class ParsingData {
 
 
     /**
-     * Read data from given file as free data format (sea level hour by hour).
-     * Create a new Port object if none exists or complete the corresponding one stored in objects-directory.
-     * Move file into output-directory when finished reading.
-     * Fulfill the given JProgressBar.
+     * Lit les données du fichier donné en tant que format gratuit (Hauteurs d'eau heure par heure)<br/>
+     * Crée un nouveau port si aucun n'existe ou complète celui correspondant stocké dans le dossier <i>objects</i><br/>
+     * Déplace le fichier dans le dossier <i>output</i> lors que la lecture est finie.<br/>
+     * Remplit la barre de progression.
      *
-     * @param file datafile to read
-     * @param bar  JProgressBar to see the evolution
+     * @param file fichier de données à lire
+     * @param bar  JProgressBar à incrémenter
      * @see Port
      */
     private static void readHauteurs(File file, JProgressBar bar) {
@@ -194,13 +194,14 @@ public class ParsingData {
 
 
     /**
-     * Read data from given file as paying data format (high tide and low tide).
-     * Create a new Port object if none exists or complete the corresponding one stored in objects-directory.
-     * Move file into output-directory when finished reading.
-     * Fulfill the given JProgressBar.
+     * Lit les données du fichier donné en tant que format payant (Marées hautes et marées basses)<br/>
+     * Crée un nouveau port si aucun n'existe ou complète celui correspondant stocké dans le dossier <i>objects</i><br/>
+     * Déplace le fichier dans le dossier <i>output</i> lors que la lecture est finie.<br/>
+     * Remplit la barre de progression.
      *
      * @param file datafile to read
      * @see Port
+     * @see Marees
      */
     private static void readMarees(File file, JProgressBar bar) {
         try {
@@ -276,11 +277,11 @@ public class ParsingData {
     }
 
     /**
-     * Method called by readMarees to stock data in the given array.
-     * Stock in the following format : PM, BM, PB, BM
+     * Méthode appelée par readMarees pour stocker les données dans le tableau donnée.<br/>
+     * Stocke selon le format suivant: PM, BM, PM, BM (chronologique).<br/>
      *
-     * @param split  splitted line with tide data
-     * @param marees Array for the 4 tides of the day
+     * @param split  la ligne découpée aux tabulations
+     * @param marees le tableau pour les 4 marées
      * @see #readMarees(File, JProgressBar)
      * @see Marees
      */
@@ -301,9 +302,9 @@ public class ParsingData {
     }
 
     /**
-     * Method to get the total number of line that will be read in order to increase properly the JProgressBar
-     * Count the number of lines of a specific file.
-     * If this file is a directory, then call recursively.
+     * Méthode pour récupérer le nombre total de lignes qui seront lues, pour pouvoir augmenter correctement la JProgressBar.<br/>
+     * Compte le nombre de lignes d'un fichier spécifique.<br/>
+     * Si ce fichier est un dossier, alors regarde pour tous les fichiers qu'il contient.<br/>
      *
      * @param folder File where to count the number of lines
      * @return number of lines of the file
@@ -311,9 +312,9 @@ public class ParsingData {
     private static int getTotalLines(File folder) {
         int count = 0;
         for (File file : Objects.requireNonNull(folder.listFiles())) {
-            if (file.isDirectory()) { // If directory
+            if (file.isDirectory()) { // Si c'est un dossier alors récursif
                 count += getTotalLines(file);
-            } else if (file.getName().endsWith(".txt")) { //If file .txt
+            } else if (file.getName().endsWith(".txt")) { // Ne compte que les .txt
                 try {
                     BufferedReader reader = new BufferedReader(new FileReader(file));
                     while (reader.readLine() != null) count++;
