@@ -277,7 +277,7 @@ public class ParsingData {
     }
 
     /**
-     * Méthode appelée par readMarees pour stocker les données dans le tableau donnée.<br/>
+     * Méthode appelée par readMarees pour stocker les données dans le tableau donné.<br/>
      * Stocke selon le format suivant: PM, BM, PM, BM (chronologique).<br/>
      *
      * @param split  la ligne découpée aux tabulations

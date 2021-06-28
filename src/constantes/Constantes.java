@@ -16,7 +16,7 @@ public interface Constantes {
     String OUT_FILE = "output/";
     String IN_FILE = "input/";
     String OBJ_FILE = "objects/";
-    String FIC_FILE = "fichiers/";
+    String FIC_FILE = "images/";
 
     // Sélection port et date
     String[] NOM_MOIS = {"Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"};

@@ -22,10 +22,12 @@ import java.io.IOException;
 
 /**
  * Panel affiché pendant la lecture des données.
+ * Indique l'avancement dans la lecture des données et le chargement du panel principal.
  */
 public class PanelChargement extends JPanel {
 
     private final JProgressBar bar = new JProgressBar();
+    private final JLabel titre = new JLabel("", JLabel.CENTER);
 
     public PanelChargement() {
         setLayout(new BorderLayout());
@@ -37,7 +39,7 @@ public class PanelChargement extends JPanel {
 
         c.insets = new Insets(0, 0, 50, 0);
 
-        JLabel titre = new JLabel("Lecture des nouvelles données, veuillez patienter...");
+        titre.setText("Lecture des nouvelles données, veuillez patienter...");
         titre.setFont(new Font(Font.MONOSPACED, Font.BOLD, 30));
         titre.setForeground(new Color(0, 255, 255));
         mid.add(titre, c);
@@ -60,6 +62,15 @@ public class PanelChargement extends JPanel {
         this.add(mid, BorderLayout.CENTER);
         this.add(foot, BorderLayout.PAGE_END);
 
+    }
+
+    /**
+     * Change le texte du titre.
+     *
+     * @param text le nouveau texte.
+     */
+    public void setText(String text) {
+        titre.setText(text);
     }
 
     public JProgressBar getChargementBarre() {

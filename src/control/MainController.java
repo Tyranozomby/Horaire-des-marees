@@ -34,6 +34,7 @@ public class MainController implements ActionListener {
         new Thread(() -> { //Thread pour la barre de chargement principale
             PanelChargement load = (PanelChargement) mere.getContentPane();
             ParsingData.read(load.getChargementBarre());
+            load.setText("Chargement de l'affichage général...");
 
             SuperPanel superPanel = new SuperPanel();
             selectPanel = superPanel.getSelectPanel();

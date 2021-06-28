@@ -1,6 +1,9 @@
 package vue;
 
+import constantes.Constantes;
+
 import javax.swing.JFrame;
+import javax.swing.ImageIcon;
 
 /**
  * Unique fenêtre du projet.
@@ -16,5 +19,6 @@ public class FenetreMere extends JFrame {
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setResizable(false);
         this.setVisible(true);
+        this.setIconImage(new ImageIcon(Constantes.FIC_FILE + "icon.jpg").getImage());
     }
 }
